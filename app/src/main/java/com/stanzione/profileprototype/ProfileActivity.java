@@ -1,21 +1,23 @@
 package com.stanzione.profileprototype;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class ScrollingActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class ProfileActivity extends AppCompatActivity {
+
+    private RecyclerView friendsRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,9 @@ public class ScrollingActivity extends AppCompatActivity {
         //disappearing the title when expanded
         collapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
 
+        friendsRecyclerView = (RecyclerView) findViewById(R.id.friendsRecyclerView);
+
+        /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,27 +43,28 @@ public class ScrollingActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        */
+
+        createFriends();
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_scrolling, menu);
-        return true;
+    private void createFriends(){
+
+        ArrayList<Friend> friendArrayList = new ArrayList<Friend>();
+        friendArrayList.add(new Friend("Bryan Thorne", 10, 8, 2, Friend.FriendStatus.STATUS_OFFLINE, true));
+        friendArrayList.add(new Friend("Bernardo Richardson", 32, 11, 21, Friend.FriendStatus.STATUS_ONLINE, false));
+        friendArrayList.add(new Friend("Lesley Hardy", 115, 72, 43, Friend.FriendStatus.STATUS_ONLINE, true));
+        friendArrayList.add(new Friend("Kevin Rivera", 7, 7, 0, Friend.FriendStatus.STATUS_OFFLINE, true));
+        friendArrayList.add(new Friend("Michelle Scott", 12, 7, 5, Friend.FriendStatus.STATUS_OFFLINE, false));
+
+        friendsRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+
+        FriendRecyclerAdapter friendRecyclerAdapter = new FriendRecyclerAdapter(ProfileActivity.this, friendArrayList);
+
+        friendsRecyclerView.setAdapter(friendRecyclerAdapter);
+        friendsRecyclerView.addItemDecoration(new FriendDecorationColumns(20));
+
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }
